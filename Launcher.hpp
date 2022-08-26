@@ -23,14 +23,14 @@
 
 class Launcher {
 private:
-    QStringList generateLaunchArguments();
+	QStringList generateLaunchArguments();
 public:
 
-    enum Code {
-        OK,
-        START_TIMEOUT
-    };
+	enum Code {
+		OK,
+		START_TIMEOUT
+	};
 
-    Code launch();
+	Code launch();
 
 };

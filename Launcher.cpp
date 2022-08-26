@@ -21,22 +21,22 @@
 #include <QProcess>
 
 QStringList Launcher::generateLaunchArguments() {
-    QStringList result;
-    
-    result.emplace_back("java");
-    result.emplace_back("-jar");
-    result.emplace_back("my_jar.jar");
+	QStringList result;
+	
+	result.emplace_back("java");
+	result.emplace_back("-jar");
+	result.emplace_back("my_jar.jar");
 
-    return result;
+	return result;
 }
 
 Launcher::Code Launcher::launch() {
-    QStringList args = generateLaunchArguments();
-    QProcess process;
-    process.start(args[0], args.sliced(1, args.length() - 1));
-    if(!process.waitForStarted()) {
-        return Code::START_TIMEOUT;
-    }
+	QStringList args = generateLaunchArguments();
+	QProcess process;
+	process.start(args[0], args.sliced(1, args.length() - 1));
+	if(!process.waitForStarted()) {
+		return Code::START_TIMEOUT;
+	}
 
-    return Code::OK;
+	return Code::OK;
 }
