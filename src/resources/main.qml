@@ -1,5 +1,7 @@
-import QtQuick 2.9
+import QtQuick 2.15
+import QtQuick.Controls 2.15
 
-Text {
-	text: "Hello, world!";
+Button {
+	text: "Play"
+	onClicked: launcher.launch()
 }

@@ -17,10 +17,14 @@
  */
 
 #include <QtQuick>
+#include <QVariant>
 
+#include "Launcher.hpp"
 #include "config.hpp"
 
 int main(int argc, char **argv) {
+	Launcher launcher;
+
 	QGuiApplication app(argc, argv);
 	app.setApplicationName(APP_NAME);
 	app.setApplicationDisplayName(APP_NAME);
@@ -28,6 +32,8 @@ int main(int argc, char **argv) {
 
 	QQuickView view;
 	view.setSource(QUrl("qrc:/main.qml"));
+	view.rootContext()->setContextProperty("launcher", &launcher);
+
 	view.show();
 
 	return app.exec();

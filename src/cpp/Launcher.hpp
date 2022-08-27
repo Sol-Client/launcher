@@ -18,9 +18,11 @@
 
 #pragma once
 
+#include <QObject>
 #include <QStringList>
 
-class Launcher {
+class Launcher : public QObject {
+Q_OBJECT
 
 private:
 	QStringList generateLaunchArguments();
@@ -33,6 +35,7 @@ public:
 		START_TIMEOUT
 	};
 
+public slots:
 	Code launch();
 
 };
