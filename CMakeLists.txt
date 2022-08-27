@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 cmake_minimum_required(VERSION 3.16)
 
 project(sol_client_launcher VERSION 1.0.0 LANGUAGES CXX)
@@ -16,6 +18,7 @@ add_executable(
 	${PROJECT_NAME}
 	src/cpp/main.cpp
 	src/cpp/Launcher.cpp
+	src/cpp/Process.cpp
 	${APP_RESOURCES}
 )
 

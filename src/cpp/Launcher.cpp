@@ -1,44 +1,32 @@
-/*
- * Sol Client Launcher - recode of Sol Client's custom launcher.
- * Copyright (C) 2022  TheKodeToad and contributors
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+// SPDX-License-Identifier: GPL-3.0-or-later
 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+#include <QDebug>
 
 #include "Launcher.hpp"
 
-#include <QProcess>
-
 QStringList Launcher::generateLaunchArguments() {
-	QStringList result;
-
-	result.emplace_back("java");
-	result.emplace_back("-jar");
-	result.emplace_back("my_jar.jar");
-
-	return result;
+	return {"java", "-jar", "my_jar.jar"};
 }
 
 Launcher::Code Launcher::launch() {
 	const QStringList args = generateLaunchArguments();
 
-	QProcess process;
-	process.start(args[0], args.sliced(1, args.length() - 1));
+	process = new Process(this);
+	process->start(args[0], args.sliced(1, args.length() - 1));
 
-	if(!process.waitForStarted()) {
+	if(!process->waitForStarted()) {
 		return START_TIMEOUT;
 	}
+
+	connect(process, &QProcess::readyReadStandardOutput, [this]() {
+		qDebug() << process->readAllStandardOutput() << '\n';
+	});
+
+	connect(process, &QProcess::readyReadStandardError, [this]() {
+		qDebug() << process->readAllStandardError() << '\n';
+	});
+
+	qDebug() << "Process exited with code " << process->exitCode() << '\n';
 
 	return OK;
 }
