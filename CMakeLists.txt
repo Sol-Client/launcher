@@ -10,6 +10,8 @@ find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 
 qt6_add_resources(APP_RESOURCES src/resources/resources.qrc)
 
+add_definitions(-DCMAKE_APP_VERSION="${PROJECT_VERSION}")
+
 add_executable(
 	${PROJECT_NAME}
 	src/cpp/main.cpp

@@ -16,16 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
-#include <exception>
-#include <cassert>
-
 #include <QtQuick>
 
-#include "Launcher.hpp"
+#include "config.hpp"
 
 int main(int argc, char **argv) {
 	QGuiApplication app(argc, argv);
+	app.setApplicationName(APP_NAME);
+	app.setApplicationDisplayName(APP_NAME);
+	app.setApplicationVersion(APP_VERSION);
 
 	QQuickView view;
 	view.setSource(QUrl("qrc:/main.qml"));
