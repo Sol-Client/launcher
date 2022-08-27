@@ -17,7 +17,6 @@
  */
 
 #include <QtQuick>
-#include <QVariant>
 
 #include "Launcher.hpp"
 #include "config.hpp"
