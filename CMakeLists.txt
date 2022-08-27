@@ -6,13 +6,15 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Gui) 
+find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 
-qt_add_resources(sol_client_launcher "resources"
-	FILES
-		qml/main.qml
+qt_add_resources(${PROJECT_NAME} "src/resources/main.qrc")
+
+add_executable(
+	${PROJECT_NAME}
+	src/cpp/main.cpp
+	src/cpp/Launcher.cpp
 )
 
-add_executable(sol_client_launcher main.cpp Launcher.cpp)
-
-target_link_libraries(sol_client_launcher PRIVATE Qt6::Gui Qt6::Quick)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Core Qt6::Quick)
