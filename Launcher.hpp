@@ -18,18 +18,18 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include <QStringList>
 
 class Launcher {
 
 private:
 	QStringList generateLaunchArguments();
+
 public:
+	/// Represents success or failure on launch.
 	enum Code {
 		OK,
+		/// Waiting for the process to start timed out (30 seconds).
 		START_TIMEOUT
 	};
 
