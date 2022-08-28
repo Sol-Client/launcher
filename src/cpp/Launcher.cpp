@@ -12,7 +12,7 @@ Launcher::Code Launcher::launch() {
 	const QStringList args = generateLaunchArguments();
 
 	process = new Process(this);
-	process->start(args[0], args.sliced(1, args.length() - 1));
+	process->start(args[0], QStringList(args.begin() + 1, args.begin() + args.length()));
 
 	if(!process->waitForStarted()) {
 		return START_TIMEOUT;

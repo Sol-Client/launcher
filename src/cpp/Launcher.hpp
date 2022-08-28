@@ -3,6 +3,7 @@
 #pragma once
 
 #include <QStringList>
+#include <qobjectdefs.h>
 
 #include "Process.hpp"
 
@@ -23,6 +24,8 @@ public:
 		/// Waiting for the process to start timed out (30 seconds).
 		START_TIMEOUT
 	};
+
+	Q_ENUM(Code)
 
 public slots:
 	Code launch();
