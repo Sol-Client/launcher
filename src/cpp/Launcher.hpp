@@ -2,32 +2,25 @@
 
 #pragma once
 
-#include <QStringList>
-#include <qobjectdefs.h>
+#include <QList>
+#include <QProcess>
+#include <qobject.h>
 
-#include "Process.hpp"
+#include "Instance.hpp"
 
 class Launcher final : public QObject {
 	Q_OBJECT
 
 private:
-	Process *process;
+	QList<Instance *> *instances;
 
 	QStringList generateLaunchArguments();
 
 public:
-	using QObject::QObject;
+	explicit Launcher(QObject *parent = nullptr);
 
-	/// Represents success or failure on launch.
-	enum Code {
-		OK,
-		/// Waiting for the process to start timed out (30 seconds).
-		START_TIMEOUT
-	};
+	~Launcher();
 
-	Q_ENUM(Code)
-
-public slots:
-	Code launch();
+	Q_INVOKABLE void launch();
 
 };

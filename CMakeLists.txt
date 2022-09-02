@@ -18,7 +18,7 @@ add_executable(
 	${PROJECT_NAME}
 	src/cpp/main.cpp
 	src/cpp/Launcher.cpp
-	src/cpp/Process.cpp
+	src/cpp/Instance.cpp
 	${APP_RESOURCES}
 )
 

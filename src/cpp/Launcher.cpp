@@ -1,32 +1,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include <QDebug>
-
 #include "Launcher.hpp"
+
+Launcher::Launcher(QObject *parent) : QObject(parent) {
+	instances = new QList<Instance *>;
+}
+
+Launcher::~Launcher() {
+	qDeleteAll(*instances);
+	delete instances;
+}
 
 QStringList Launcher::generateLaunchArguments() {
 	return {"java", "-jar", "my_jar.jar"};
 }
 
-Launcher::Code Launcher::launch() {
+void Launcher::launch() {
 	const QStringList args = generateLaunchArguments();
 
-	process = new Process(this);
-	process->start(args[0], QStringList(args.begin() + 1, args.begin() + args.length()));
-
-	if(!process->waitForStarted()) {
-		return START_TIMEOUT;
-	}
-
-	connect(process, &QProcess::readyReadStandardOutput, [this]() {
-		qDebug() << process->readAllStandardOutput() << '\n';
-	});
-
-	connect(process, &QProcess::readyReadStandardError, [this]() {
-		qDebug() << process->readAllStandardError() << '\n';
-	});
-
-	qDebug() << "Process exited with code " << process->exitCode() << '\n';
-
-	return OK;
+	Instance *instance = new Instance(this);
+	instance->start(args.at(0), QList(args.begin() + 1, args.begin() + args.length()));
+	instances->append(instance);
 }
