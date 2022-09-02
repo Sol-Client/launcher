@@ -15,7 +15,7 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 			typeStr = "STDERR";
 			break;
 		default:
-			qWarning() << "Unknown output type " << type << "\n";
+			qWarning() << "Unknown output type" << type;
 			break;
 	};
 
@@ -23,13 +23,14 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 		data.truncate(data.size() - 1);
 	}
 
-	qDebug().nospace().noquote() << "[" << typeStr << "]" << " " << data;
+	qInfo().nospace().noquote() << "[" << typeStr << "]" << " " << data;
 }
 
 Instance::Instance(QObject *parent) : QProcess(parent) {
 	connect(this, &QProcess::readyReadStandardOutput, [this]() {
 		onOutput(readAllStandardOutput(), STDOUT);
 	});
+
 	connect(this, &QProcess::readyReadStandardError, [this]() {
 		onOutput(readAllStandardError(), STDERR);
 	});

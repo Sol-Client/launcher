@@ -4,7 +4,6 @@
 
 #include <QList>
 #include <QProcess>
-#include <qobject.h>
 
 #include "Instance.hpp"
 
@@ -18,8 +17,6 @@ private:
 
 public:
 	explicit Launcher(QObject *parent = nullptr);
-
-	~Launcher();
 
 	Q_INVOKABLE void launch();
 
