@@ -6,6 +6,10 @@ Launcher::Launcher(QObject *parent) : QObject(parent) {
 	instances = new QList<Instance *>;
 }
 
+Launcher::~Launcher() {
+	delete instances;
+}
+
 QStringList Launcher::generateLaunchArguments() {
 	return {"java", "-jar", "my_jar.jar"};
 }
