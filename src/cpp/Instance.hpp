@@ -9,7 +9,7 @@ class Instance : public QProcess {
 	Q_OBJECT
 
 private:
-	enum OutputType {
+	enum class OutputType {
 		STDOUT,
 		STDERR
 	};
