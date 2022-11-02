@@ -15,7 +15,7 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 			typeStr = "STDERR";
 			break;
 		default:
-			qWarning() << "Unknown output type" << type;
+			qWarning() << "Unknown output type";
 			typeStr = "UNKNOWN";
 			break;
 	}

@@ -6,10 +6,11 @@
 #include "config.hpp"
 
 int main(int argc, char **argv) {
-	QGuiApplication app(argc, argv);
-	app.setApplicationName(APP_NAME);
-	app.setApplicationDisplayName(APP_NAME);
-	app.setApplicationVersion(APP_VERSION);
+	QGuiApplication instance(argc, argv);
+
+	QGuiApplication::setApplicationName(APP_NAME);
+	QGuiApplication::setApplicationDisplayName(APP_NAME);
+	QGuiApplication::setApplicationVersion(APP_VERSION);
 
 	QQuickView view;
 	view.setSource(QUrl("qrc:/main.qml"));
@@ -19,5 +20,5 @@ int main(int argc, char **argv) {
 
 	view.show();
 
-	return app.exec();
+	return QGuiApplication::exec();
 }
