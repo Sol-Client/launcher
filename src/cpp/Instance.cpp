@@ -17,7 +17,7 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 		default:
 			qWarning() << "Unknown output type" << type;
 			break;
-	};
+	}
 
 	if(data.endsWith('\n')) {
 		data.truncate(data.size() - 1);
