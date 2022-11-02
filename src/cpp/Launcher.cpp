@@ -3,11 +3,6 @@
 #include "Launcher.hpp"
 
 Launcher::Launcher(QObject *parent) : QObject(parent) {
-	instances = new QList<Instance *>;
-}
-
-Launcher::~Launcher() {
-	delete instances;
 }
 
 QStringList Launcher::generateLaunchArguments() {
@@ -19,5 +14,5 @@ void Launcher::launch() {
 
 	Instance *instance = new Instance(this);
 	instance->start(args.at(0), QList(args.begin() + 1, args.begin() + args.length()));
-	instances->append(instance);
+	instances.append(instance);
 }
