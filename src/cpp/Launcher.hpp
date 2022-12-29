@@ -19,5 +19,4 @@ public:
 	explicit Launcher(QObject *parent = nullptr);
 
 	Q_INVOKABLE void launch();
-
 };

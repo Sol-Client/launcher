@@ -9,10 +9,7 @@ class Instance : public QProcess {
 	Q_OBJECT
 
 private:
-	enum class OutputType {
-		STDOUT,
-		STDERR
-	};
+	enum class OutputType { STDOUT, STDERR };
 
 	void onOutput(QByteArray data, OutputType type);
 
@@ -22,5 +19,4 @@ public:
 	virtual ~Instance() override;
 
 	void detach();
-
 };
