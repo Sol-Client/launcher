@@ -2,10 +2,17 @@
 
 #pragma once
 
+#include "File.hpp"
 #include <QJsonDocument>
 
 class Version final {
 public:
-	inline Version(const QJsonDocument &doc) { doc.isObject(); /* TODO things */ }
+	Version();
+	Version(const QJsonDocument &doc);
 
+	inline const File &getClient() const { return client; }
+	inline const File &getServer() const { return server; }
+
+private:
+	File client, server;
 };

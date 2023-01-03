@@ -2,10 +2,11 @@
 
 #pragma once
 
+#include "Instance.hpp"
+#include <QDir>
 #include <QList>
 #include <QProcess>
-
-#include "Instance.hpp"
+#include <memory>
 
 class Launcher final : public QObject {
 	Q_OBJECT
@@ -16,7 +17,9 @@ public:
 	Q_INVOKABLE void launch();
 
 private:
+	const QDir data;
+	const QDir versions;
 	QList<Instance *> instances;
 
-	QStringList generateLaunchArguments();
+	QStringList generateLaunchArguments(const QString &versionId);
 };

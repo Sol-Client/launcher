@@ -10,11 +10,13 @@ class VersionManifest final {
 public:
 	static VersionManifest fetch();
 
+	VersionManifest();
 	VersionManifest(const QJsonDocument &doc);
 
-	inline const QList<VersionHandle> &getVersions() const { return versions; }
-
+	inline const QList<VersionHandle> &getVersions() { return versions; }
 	const VersionHandle &getVersion(const QString &id) const;
+
+	inline bool isNull() const { return versions.isEmpty(); }
 
 private:
 	QList<VersionHandle> versions;

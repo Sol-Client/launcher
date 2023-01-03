@@ -2,11 +2,14 @@
 
 #pragma once
 
+#include <QFile>
 #include <QString>
 #include <QUrl>
 
 namespace Util {
 
-QString readUrlToString(const QUrl &url);
+QByteArray readUrl(const QUrl &url);
 
-};
+bool downloadUrlToFile(const QUrl &url, QFile &file);
+
+}; // namespace Util

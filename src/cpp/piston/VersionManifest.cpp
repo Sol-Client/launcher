@@ -1,9 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "VersionManifest.hpp"
-#include "../Util.hpp"
 #include "Constants.hpp"
-#include "MetaParseException.hpp"
 #include "Util.hpp"
 #include "VersionManifest.hpp"
 #include <QJsonArray>
@@ -11,23 +9,25 @@
 #include <QJsonObject>
 
 VersionManifest VersionManifest::fetch() {
-	return VersionManifest(QJsonDocument::fromJson(
-		Util::readUrlToString(VERSION_MANIFEST_URL).toUtf8()));
+	const QByteArray &result = Util::readUrl(VERSION_MANIFEST_URL);
+
+	if (result.isNull())
+		return VersionManifest();
+
+	return VersionManifest(QJsonDocument::fromJson(result));
 }
 
-VersionManifest::VersionManifest(const QJsonDocument &doc) {
-	if (!doc.isObject())
-		throw MetaParseException("expected version manifest to be an object");
+VersionManifest::VersionManifest() {}
 
-	const QJsonObject obj = doc.object();
-	const QJsonArray versions = Util::castToArray(obj["versions"]);
+VersionManifest::VersionManifest(const QJsonDocument &doc) {
+	const QJsonArray versions = doc["versions"].toArray();
 
 	for (const QJsonValue &version : versions)
-		this->versions.append(VersionHandle(Util::castToObj(version)));
+		this->versions.append(VersionHandle(version.toObject()));
 }
 
 const VersionHandle &VersionManifest::getVersion(const QString &id) const {
 	return *std::find_if(
 		versions.begin(), versions.end(),
-		[id](VersionHandle &version) { return version.getId() == id; });
+		[id](const VersionHandle &version) { return version.getId() == id; });
 }

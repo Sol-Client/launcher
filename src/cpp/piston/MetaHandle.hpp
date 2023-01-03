@@ -2,13 +2,24 @@
 
 #pragma once
 
-#include "../Util.hpp"
+#include "Util.hpp"
 #include <QJsonDocument>
 #include <QUrl>
 
 template <typename T> class MetaHandle {
 public:
-	virtual T fetch() const { return T(fetchDoc()); }
+	T fetch() const { return T(fetchDoc()); }
+
+	T fetchAndSave(QFile &file) const {
+		const QByteArray &bytes = fetchBytes();
+
+		if (file.open(QFile::WriteOnly)) {
+			file.write(bytes);
+			file.close();
+		}
+
+		return T(QJsonDocument::fromJson(bytes));
+	};
 
 	MetaHandle(const QUrl &url) : url(url) {}
 
@@ -19,7 +30,7 @@ public:
 protected:
 	QUrl url;
 
-	QJsonDocument fetchDoc() const {
-		return QJsonDocument::fromJson(Util::readUrlToString(url).toUtf8());
-	}
+	virtual QByteArray fetchBytes() const { return Util::readUrl(url); }
+
+	QJsonDocument fetchDoc() const { return QJsonDocument::fromJson(fetchBytes()); }
 };

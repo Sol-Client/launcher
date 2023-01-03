@@ -21,8 +21,8 @@ add_executable(
 	src/cpp/Instance.cpp
 	src/cpp/Util.cpp
 
-	src/cpp/piston/MetaParseException.cpp
-	src/cpp/piston/Util.cpp
+	src/cpp/piston/File.cpp
+	src/cpp/piston/Version.cpp
 	src/cpp/piston/VersionHandle.cpp
 	src/cpp/piston/VersionManifest.cpp
 	${APP_RESOURCES}

@@ -15,10 +15,15 @@ int main(int argc, char **argv) {
 	QQuickView view;
 	view.setSource(QUrl("qrc:/main.qml"));
 
-	Launcher launcher(&view);
-	view.rootContext()->setContextProperty("launcher", &launcher);
+	try {
+		Launcher launcher(&view);
+		view.rootContext()->setContextProperty("launcher", &launcher);
 
-	view.show();
+		view.show();
 
-	return QGuiApplication::exec();
+		return QGuiApplication::exec();
+	} catch (const QString &error) {
+		qCritical().noquote() << error;
+		return EXIT_FAILURE;
+	}
 }
