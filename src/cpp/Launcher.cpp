@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include <QDebug>
+#include <QQmlEngine>
+#include <qqml.h>
 
-#include "LaunchError.hpp"
 #include "Launcher.hpp"
 #include "piston/VersionManifest.hpp"
 
-Launcher::Launcher(QObject *parent)
-	: QObject(parent), data("."), versions(data.filePath("versions")) {
+Launcher::Launcher(QObject *parent, QQmlEngine *engine)
+	: QObject(parent), engine(engine), data("."), versions(data.filePath("versions")) {
 	if (!data.exists() && !data.mkpath("."))
 		throw tr("Could not make the data directory.");
 }
@@ -25,19 +26,23 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 	// version folder
 
 	if (versionId.contains('/') || versionId.contains(QDir::separator()))
-		throw LaunchError{
-			tr("Version identifier may not contain path separator.")};
+		engine->throwError(
+			tr("Version identifier may not contain path separator."));
+
+	qDebug() << "create version dir";
 
 	const QDir versionDir(versions.filePath(versionId));
 	if (!versionDir.exists() && !versionDir.mkpath("."))
-		throw LaunchError{tr("Could not make version directory.")};
+		engine->throwError(tr("Could not make version directory."));
 
 	// version.json
+
+	qDebug() << "fetch/load version json";
 
 	const QFileInfo versionJson(versionDir, versionId + ".json");
 
 	if (versionJson.exists() && !versionJson.isFile())
-		throw LaunchError{tr("%1 is not a file.").arg(versionJson.path())};
+		engine->throwError(tr("%1 is not a file.").arg(versionJson.path()));
 
 	QFile versionJsonFile(versionJson.filePath());
 
@@ -56,13 +61,15 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 
 	// version.jar
 
+	qInfo() << "validate/download version jar";
+
 	const QFileInfo versionJar(versionDir, versionId + ".jar");
 
 	if (versionJar.exists() && !versionJar.isFile())
-		throw LaunchError{tr("%1 is not a file.").arg(versionJar.path())};
+		engine->throwError(tr("%1 is not a file.").arg(versionJar.path()));
 
 	if (!version.getClient().download(versionJar.absoluteFilePath()))
-		throw LaunchError{tr("Failed to download client jar.")};
+		engine->throwError(tr("Failed to download client jar."));
 
 	return QStringList{"java", "-jar", "my_jar.jar"};
 }

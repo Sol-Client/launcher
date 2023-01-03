@@ -33,7 +33,7 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 		break;
 	}
 
-	// Accumulated output is unlikely to be used in Minecraft due to log4j.
+	// accumulated output is unlikely to be used in Minecraft due to log4j
 	if (data.endsWith('\n')) {
 		data.truncate(data.size() - 1);
 	}

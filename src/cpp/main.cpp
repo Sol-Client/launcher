@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
 	view.setSource(QUrl("qrc:/main.qml"));
 
 	try {
-		Launcher launcher(&view);
+		Launcher launcher(&view, view.engine());
 		view.rootContext()->setContextProperty("launcher", &launcher);
 
 		view.show();

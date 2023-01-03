@@ -13,7 +13,7 @@ File::File(const QJsonObject &object)
 	  path(object["path"].toString()) {}
 
 static bool checkHash(QFile &file, const QString &expected) {
-	static QCryptographicHash hash(QCryptographicHash::Algorithm::Sha256);
+	QCryptographicHash hash(QCryptographicHash::Algorithm::Sha1);
 
 	if (!file.open(QFile::ReadOnly))
 		return false;
@@ -22,7 +22,7 @@ static bool checkHash(QFile &file, const QString &expected) {
 		return false;
 
 	return QString::compare(hash.result().toHex(), expected,
-							Qt::CaseInsensitive);
+							Qt::CaseInsensitive) == 0;
 }
 
 bool File::download(const QString &path) const {
@@ -39,8 +39,11 @@ bool File::download(const QString &path) const {
 			return false;
 
 		QFile existingFile(path);
+
 		if (!checkHash(existingFile, sha1))
 			existingFile.remove();
+		else
+			return true;
 	}
 
 	QFile file(path);
