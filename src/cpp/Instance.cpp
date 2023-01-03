@@ -4,6 +4,19 @@
 
 #include "Instance.hpp"
 
+Instance::Instance(QObject *parent) : QProcess(parent) {
+	connect(this, &QProcess::readyReadStandardOutput, [this]() {
+		onOutput(readAllStandardOutput(), OutputType::STDOUT);
+	});
+
+	connect(this, &QProcess::readyReadStandardError,
+			[this]() { onOutput(readAllStandardError(), OutputType::STDERR); });
+}
+
+Instance::~Instance() { detach(); }
+
+void Instance::detach() { setProcessState(NotRunning); }
+
 void Instance::onOutput(QByteArray data, OutputType type) {
 	const char *typeStr;
 
@@ -20,6 +33,7 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 		break;
 	}
 
+	// Accumulated output is unlikely to be used in Minecraft due to log4j.
 	if (data.endsWith('\n')) {
 		data.truncate(data.size() - 1);
 	}
@@ -27,16 +41,3 @@ void Instance::onOutput(QByteArray data, OutputType type) {
 	qInfo().nospace().noquote() << "[" << typeStr << "]"
 								<< " " << data;
 }
-
-Instance::Instance(QObject *parent) : QProcess(parent) {
-	connect(this, &QProcess::readyReadStandardOutput, [this]() {
-		onOutput(readAllStandardOutput(), OutputType::STDOUT);
-	});
-
-	connect(this, &QProcess::readyReadStandardError,
-			[this]() { onOutput(readAllStandardError(), OutputType::STDERR); });
-}
-
-Instance::~Instance() { detach(); }
-
-void Instance::detach() { setProcessState(NotRunning); }

@@ -10,13 +10,13 @@
 class Launcher final : public QObject {
 	Q_OBJECT
 
-private:
-	QList<Instance *> instances;
-
-	QStringList generateLaunchArguments();
-
 public:
 	explicit Launcher(QObject *parent = nullptr);
 
 	Q_INVOKABLE void launch();
+
+private:
+	QList<Instance *> instances;
+
+	QStringList generateLaunchArguments();
 };
