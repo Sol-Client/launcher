@@ -6,5 +6,6 @@
 
 class Version final {
 public:
-	inline Version(const QJsonDocument &doc) { doc.isObject(); }
+	inline Version(const QJsonDocument &doc) { doc.isObject(); /* TODO things */ }
+
 };

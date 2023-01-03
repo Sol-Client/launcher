@@ -14,10 +14,11 @@ public:
 
 	virtual ~MetaHandle() {}
 
-private:
-	QUrl url;
+	inline const QUrl &getUrl() { return url; }
 
 protected:
+	QUrl url;
+
 	QJsonDocument fetchDoc() const {
 		return QJsonDocument::fromJson(Util::readUrlToString(url).toUtf8());
 	}

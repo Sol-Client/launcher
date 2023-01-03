@@ -12,10 +12,10 @@ public:
 
 	VersionManifest(const QJsonDocument &doc);
 
-	inline const QList<VersionHandle> &getVersions() const { return *versions; }
+	inline const QList<VersionHandle> &getVersions() const { return versions; }
 
 	const VersionHandle &getVersion(const QString &id) const;
 
 private:
-	const std::unique_ptr<QList<VersionHandle>> versions;
+	QList<VersionHandle> versions;
 };

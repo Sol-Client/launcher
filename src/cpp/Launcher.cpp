@@ -17,12 +17,6 @@ void Launcher::launch() {
 }
 
 QStringList Launcher::generateLaunchArguments() {
-	VersionManifest manifest = VersionManifest::fetch();
-	for (const VersionHandle &handle : manifest.getVersions()) {
-		qDebug() << "found version" << handle.getId();
-	}
-	// QString id = manifest.getVersion("1.8.9").getId();
-	// qDebug() << "found version" << id;
 
 	return QStringList{"java", "-jar", "my_jar.jar"};
 }

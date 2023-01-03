@@ -15,8 +15,7 @@ VersionManifest VersionManifest::fetch() {
 		Util::readUrlToString(VERSION_MANIFEST_URL).toUtf8()));
 }
 
-VersionManifest::VersionManifest(const QJsonDocument &doc)
-	: versions(std::make_unique<QList<VersionHandle>>()) {
+VersionManifest::VersionManifest(const QJsonDocument &doc) {
 	if (!doc.isObject())
 		throw MetaParseException("expected version manifest to be an object");
 
@@ -24,11 +23,11 @@ VersionManifest::VersionManifest(const QJsonDocument &doc)
 	const QJsonArray versions = Util::castToArray(obj["versions"]);
 
 	for (const QJsonValue &version : versions)
-		this->versions->append(VersionHandle(Util::castToObj(version)));
+		this->versions.append(VersionHandle(Util::castToObj(version)));
 }
 
 const VersionHandle &VersionManifest::getVersion(const QString &id) const {
 	return *std::find_if(
-		versions->begin(), versions->end(),
+		versions.begin(), versions.end(),
 		[id](VersionHandle &version) { return version.getId() == id; });
 }
