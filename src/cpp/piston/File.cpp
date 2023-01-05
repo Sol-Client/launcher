@@ -28,29 +28,29 @@ static bool checkHash(QFile &file, const QString &expected) {
 							Qt::CaseInsensitive) == 0;
 }
 
-bool File::download(const QString &path) const {
+QString File::download(const QString &path) const {
 	// try to prevent path traversal
 	const QString fullPath =
 		QDir::cleanPath(path + QDir::separator() + this->path);
 	if (!fullPath.startsWith(QDir::cleanPath(path)))
-		return false;
+		return QString();
 
 	const QFileInfo info(fullPath);
 
 	if (info.exists()) {
 		if (!info.isFile())
-			return false;
+			return QString();
 
 		QFile existingFile(path);
 
 		if (!checkHash(existingFile, sha1))
 			existingFile.remove();
 		else
-			return true;
+			return fullPath;
 	}
 
 	if (!info.dir().exists() && !info.dir().mkpath("."))
-		return false;
+		return QString();
 
 	QFile file(fullPath);
 
@@ -60,10 +60,10 @@ bool File::download(const QString &path) const {
 		file.close();
 
 	if (!result)
-		return false;
+		return QString();
 
 	if (!checkHash(file, sha1))
-		return false;
+		return QString();
 
-	return true;
+	return fullPath;
 }

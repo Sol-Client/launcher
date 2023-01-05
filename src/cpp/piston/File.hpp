@@ -16,7 +16,7 @@ public:
 
 	inline bool isNull() const { return sha1.isNull(); }
 
-	bool download(const QString &path) const;
+	QString download(const QString &path) const;
 
 private:
 	QString sha1;

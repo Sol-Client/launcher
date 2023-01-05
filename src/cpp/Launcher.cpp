@@ -28,6 +28,8 @@ void Launcher::launch() {
 }
 
 QStringList Launcher::generateLaunchArguments(const QString &versionId) {
+	QStringList classpath;
+
 	// version folder
 
 	if (versionId.contains('/') || versionId.contains(QDir::separator()))
@@ -72,12 +74,14 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 	qInfo() << "validate/download version jar";
 
 	const QFileInfo versionJar(versionDir, versionId + ".jar");
+	classpath.append(versionJar.path());
+
 	if (versionJar.exists() && !versionJar.isFile()) {
 		engine->throwError(tr("%1 is not a file.").arg(versionJar.path()));
 		return QStringList();
 	}
 
-	if (!version.getClient().download(versionJar.filePath())) {
+	if (version.getClient().download(versionJar.filePath()).isNull()) {
 		engine->throwError(tr("Failed to download client jar."));
 		return QStringList();
 	}
@@ -85,14 +89,20 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 	// libraries
 
 	qInfo() << "download libraries";
+
 	for (const Library &library : version.getLibraries()) {
 		if (library.hasFile("artifact")) {
-			if (!library.getFile("artifact").download(libraries.path())) {
-				engine->throwError(tr("Failed to download \"%1\".").arg(library.getName()));
+			const File artifact = library.getFile("artifact");
+			const QString path = artifact.download(libraries.path());
+			if (path.isNull()) {
+				engine->throwError(
+					tr("Failed to download \"%1\".").arg(library.getName()));
 				return QStringList();
 			}
+
+			classpath.append(path);
 		}
 	}
 
-	return QStringList{"java", "-jar", "my_jar.jar"};
+	return QStringList{"java", "-cp", classpath.join(QDir::listSeparator())};
 }
