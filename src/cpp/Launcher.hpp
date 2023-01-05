@@ -21,6 +21,7 @@ private:
 	QQmlEngine *engine;
 	const QDir data;
 	const QDir versions;
+	const QDir libraries;
 	QList<Instance *> instances;
 
 	QStringList generateLaunchArguments(const QString &versionId);

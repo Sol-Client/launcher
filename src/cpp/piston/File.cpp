@@ -13,6 +13,9 @@ File::File(const QJsonObject &object)
 	  path(object["path"].toString()) {}
 
 static bool checkHash(QFile &file, const QString &expected) {
+	if (expected.isEmpty())
+		return true;
+
 	QCryptographicHash hash(QCryptographicHash::Algorithm::Sha1);
 
 	if (!file.open(QFile::ReadOnly))
@@ -27,12 +30,12 @@ static bool checkHash(QFile &file, const QString &expected) {
 
 bool File::download(const QString &path) const {
 	// try to prevent path traversal
-	if (const QString cleaned =
-			QDir::cleanPath(path + QDir::separator() + this->path);
-		!cleaned.startsWith(path))
+	const QString fullPath =
+		QDir::cleanPath(path + QDir::separator() + this->path);
+	if (!fullPath.startsWith(QDir::cleanPath(path)))
 		return false;
 
-	const QFileInfo info(path);
+	const QFileInfo info(fullPath);
 
 	if (info.exists()) {
 		if (!info.isFile())
@@ -46,8 +49,13 @@ bool File::download(const QString &path) const {
 			return true;
 	}
 
-	QFile file(path);
-	bool result = Util::downloadUrlToFile(url, file);
+	if (!info.dir().exists() && !info.dir().mkpath("."))
+		return false;
+
+	QFile file(fullPath);
+
+	const bool result = Util::downloadUrlToFile(url, file);
+
 	if (file.isOpen())
 		file.close();
 

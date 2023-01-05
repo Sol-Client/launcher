@@ -3,6 +3,7 @@
 #pragma once
 
 #include "File.hpp"
+#include "Library.hpp"
 #include <QJsonDocument>
 
 class Version final {
@@ -13,6 +14,10 @@ public:
 	inline const File &getClient() const { return client; }
 	inline const File &getServer() const { return server; }
 
+	inline const QList<Library> getLibraries() const { return libraries; }
+
 private:
 	File client, server;
+
+	QList<Library> libraries;
 };

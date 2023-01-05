@@ -8,13 +8,18 @@
 #include "piston/VersionManifest.hpp"
 
 Launcher::Launcher(QObject *parent, QQmlEngine *engine)
-	: QObject(parent), engine(engine), data("."), versions(data.filePath("versions")) {
+	: QObject(parent), engine(engine), data("."),
+	  versions(data.filePath("versions")),
+	  libraries(data.filePath("libraries")) {
 	if (!data.exists() && !data.mkpath("."))
 		throw tr("Could not make the data directory.");
 }
 
 void Launcher::launch() {
 	const QStringList args = generateLaunchArguments("1.8.9");
+
+	if (args.isEmpty())
+		return;
 
 	const auto instance = new Instance(this);
 	instance->start(args.at(0),
@@ -32,22 +37,25 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 	qDebug() << "create version dir";
 
 	const QDir versionDir(versions.filePath(versionId));
-	if (!versionDir.exists() && !versionDir.mkpath("."))
+	if (!versionDir.exists() && !versionDir.mkpath(".")) {
 		engine->throwError(tr("Could not make version directory."));
+		return QStringList();
+	}
 
 	// version.json
 
 	qDebug() << "fetch/load version json";
 
 	const QFileInfo versionJson(versionDir, versionId + ".json");
-
-	if (versionJson.exists() && !versionJson.isFile())
+	if (versionJson.exists() && !versionJson.isFile()) {
 		engine->throwError(tr("%1 is not a file.").arg(versionJson.path()));
+		return QStringList();
+	}
 
 	QFile versionJsonFile(versionJson.filePath());
 
-	VersionManifest manifest = VersionManifest::fetch();
-	bool online = !manifest.isNull();
+	const VersionManifest manifest = VersionManifest::fetch();
+	const bool online = !manifest.isNull();
 	Version version;
 
 	if (online)
@@ -64,12 +72,29 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 	qInfo() << "validate/download version jar";
 
 	const QFileInfo versionJar(versionDir, versionId + ".jar");
-
-	if (versionJar.exists() && !versionJar.isFile())
+	if (versionJar.exists() && !versionJar.isFile()) {
 		engine->throwError(tr("%1 is not a file.").arg(versionJar.path()));
+		return QStringList();
+	}
 
-	if (!version.getClient().download(versionJar.absoluteFilePath()))
+	if (!version.getClient().download(versionJar.filePath())) {
 		engine->throwError(tr("Failed to download client jar."));
+		return QStringList();
+	}
+
+	// libraries
+
+	qInfo() << "download libraries";
+	for (const Library &library : version.getLibraries()) {
+		if (library.hasFile("artifact")) {
+			if (!library.getFile("artifact").download(libraries.path())) {
+				engine->throwError(tr("Failed to download \"%1\".").arg(library.getName()));
+				return QStringList();
+			}
+		}
+	}
+
+	// version.getLibraries()
 
 	return QStringList{"java", "-jar", "my_jar.jar"};
 }

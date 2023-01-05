@@ -22,6 +22,7 @@ add_executable(
 	src/cpp/Util.cpp
 
 	src/cpp/piston/File.cpp
+	src/cpp/piston/Library.cpp
 	src/cpp/piston/Version.cpp
 	src/cpp/piston/VersionHandle.cpp
 	src/cpp/piston/VersionManifest.cpp
