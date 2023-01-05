@@ -94,7 +94,5 @@ QStringList Launcher::generateLaunchArguments(const QString &versionId) {
 		}
 	}
 
-	// version.getLibraries()
-
 	return QStringList{"java", "-jar", "my_jar.jar"};
 }
