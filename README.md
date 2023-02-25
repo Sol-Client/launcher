@@ -1,3 +1,5 @@
+> Archived. The community voted against creating another launcher.
+
 # Launcher
 (in progress) Launcher recoded in C++ and Qt.
 
